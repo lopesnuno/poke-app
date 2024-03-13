@@ -21,19 +21,19 @@ export const action: ActionFunction = async ({ request }) => {
     return json({});
   }
 
-  return redirect(`/${pokemonName}`);
+  return redirect(`/${pokemonName.toLowerCase()}`);
 };
 
 export default function Index() {
   const [name, setName] = useState<string>();
 
   function handleOnChange(v: ChangeEvent<HTMLInputElement>) {
-    setName(v.target.value.toLowerCase());
+    setName(v.target.value);
   }
 
   return (
-    <form method='post' action='/?index'>
-      <div className='flex flex-row gap-x-2'>
+    <form method='post' action='/?index' className='flex place-content-center'>
+      <div className='flex flex-row gap-x-2 py-4'>
         <Input type='text' name='name' onChange={handleOnChange} />
         {name && name.length !== 0 && (
           <Button type='submit' name='search'>Search</Button>

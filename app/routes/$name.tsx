@@ -1,13 +1,32 @@
 import { json } from '@remix-run/react';
-import { useLoaderData, useNavigate } from 'react-router';
+import { useLoaderData } from 'react-router';
 import { ChangeEvent, useState } from 'react';
 import PokemonCard from '~/components/PokemonCard';
+import Input from '~/components/Input';
+import Button from '~/components/Button';
+import { redirect } from '@remix-run/node';
 
 type Pokemon = {
   id: string, name: string, sprite: string
 };
 
-export const loader = async ({ request, params }) => {
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const actionId = formData.get('action');
+
+  if (actionId && actionId.length !== 0) {
+    const pokemonId = formData.get('pokemon-id');
+
+    return redirect(`/${actionId === 'next' ? Number(pokemonId) + 1 : Number(pokemonId) - 1}`);
+  } else {
+    const pokemonName = formData.get('name');
+
+    return redirect(`/${pokemonName}`);
+  }
+};
+
+
+export const loader = async ({ params }) => {
   const pokemonName = params.name;
 
   if (!pokemonName || pokemonName.length === 0) {
@@ -34,26 +53,23 @@ export const loader = async ({ request, params }) => {
 
 export default function PokemonPage() {
   const { pokemon } = useLoaderData();
-  const [name, setName] = useState<string>();
-
-  const navigate = useNavigate();
+  const [name, setName] = useState<string>(pokemon ? pokemon.name as string : '');
 
   function handleOnChange(v: ChangeEvent<HTMLInputElement>) {
     setName(v.target.value.toLowerCase());
   }
 
-  function handleOnClick() {
-    navigate(`/${name}`);
-  }
-
   return (
-    <>
-      <div>
-        <input type='text' name='name' onChange={handleOnChange} />
-        {name && name.length !== 0 && (
-          <button name='search' onClick={handleOnClick}>search</button>
-        )}
-      </div>
+    <div className='flex flex-col items-center gap-y-4 py-4'>
+      <form method='post'>
+        <div className='flex flex-row gap-x-2'>
+          <Input type='text' name='name' onChange={handleOnChange} value={name} />
+          {name && name.length !== 0 && (
+            <Button type='submit' name='search'>Search</Button>
+          )}
+        </div>
+      </form>
+
       {pokemon ? (
         <>
           <PokemonCard id={pokemon.id} name={pokemon.name} sprite={pokemon.sprite} />
@@ -63,6 +79,6 @@ export default function PokemonPage() {
           No pokemon found, please try another one!
         </h1>
       )}
-    </>
+    </div>
   );
 }
