@@ -18,8 +18,5 @@ module.exports = {
     },
   },
 
-  serverDependenciesToBundle: [/.*/],
-
-  tailwind: false,
-  postcss: false
+  serverDependenciesToBundle: [/.*/]
 };

@@ -1,8 +1,9 @@
 import type { ActionFunction, MetaFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import PokemonSearch from '~/components/PokemonSearch';
 import { json } from '@remix-run/react';
 import { ChangeEvent, useState } from 'react';
+import Input from '~/components/Input';
+import Button from '~/components/Button';
 
 export const meta: MetaFunction = () => {
   return [
@@ -32,11 +33,10 @@ export default function Index() {
 
   return (
     <form method='post' action='/?index'>
-      <PokemonSearch />
-      <div>
-        <input type='text' name='name' onChange={handleOnChange} />
+      <div className='flex flex-row gap-x-2'>
+        <Input type='text' name='name' onChange={handleOnChange} />
         {name && name.length !== 0 && (
-          <button type='submit' name='search'>search</button>
+          <Button type='submit' name='search'>Search</Button>
         )}
       </div>
     </form>

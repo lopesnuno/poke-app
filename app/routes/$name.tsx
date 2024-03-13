@@ -1,6 +1,7 @@
 import { json } from '@remix-run/react';
 import { useLoaderData, useNavigate } from 'react-router';
 import { ChangeEvent, useState } from 'react';
+import PokemonCard from '~/components/PokemonCard';
 
 type Pokemon = {
   id: string, name: string, sprite: string
@@ -45,14 +46,6 @@ export default function PokemonPage() {
     navigate(`/${name}`);
   }
 
-  function handlePrevious() {
-    navigate(`/${pokemon.id - 1}`);
-  }
-
-  function handleNext() {
-    navigate(`/${pokemon.id + 1}`);
-  }
-
   return (
     <>
       <div>
@@ -63,12 +56,7 @@ export default function PokemonPage() {
       </div>
       {pokemon ? (
         <>
-          <img src={pokemon.sprite} alt={''} />
-          <h1 data-cy='pokemon-number'>Number: {pokemon.id}</h1>
-          <h1 data-cy='pokemon-name'>Name: {pokemon.name}</h1>
-
-          {pokemon.id !== 1 && (<button name='previous' onClick={handlePrevious}>previous</button>)}
-          <button name='next' onClick={handleNext}>next</button>
+          <PokemonCard id={pokemon.id} name={pokemon.name} sprite={pokemon.sprite} />
         </>
       ) : (
         <h1 data-cy='error'>
