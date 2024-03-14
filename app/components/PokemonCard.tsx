@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router';
 import Button from '~/components/Button';
 
 export default function PokemonCard(pokemon: { id: number, name: string, sprite: string }) {

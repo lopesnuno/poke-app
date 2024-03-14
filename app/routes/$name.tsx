@@ -5,6 +5,7 @@ import PokemonCard from '~/components/PokemonCard';
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 import { redirect } from '@remix-run/node';
+import Error from '~/components/Error';
 
 type Pokemon = {
   id: string, name: string, sprite: string
@@ -19,9 +20,9 @@ export const action = async ({ request }) => {
 
     return redirect(`/${actionId === 'next' ? Number(pokemonId) + 1 : Number(pokemonId) - 1}`);
   } else {
-    const pokemonName = formData.get('name');
+    const pokemonName = formData.get('name') as string;
 
-    return redirect(`/${pokemonName}`);
+    return redirect(`/${pokemonName.toLowerCase()}`);
   }
 };
 
@@ -45,7 +46,7 @@ export const loader = async ({ params }) => {
   const pokemon: Pokemon = {
     id: pokemonData.id,
     name: pokemonData.name,
-    sprite: pokemonData.sprites.front_shiny as string
+    sprite: pokemonData.sprites.front_shiny
   };
 
   return json({ pokemon });
@@ -53,10 +54,10 @@ export const loader = async ({ params }) => {
 
 export default function PokemonPage() {
   const { pokemon } = useLoaderData();
-  const [name, setName] = useState<string>(pokemon ? pokemon.name as string : '');
+  const [name, setName] = useState<string>(pokemon ? pokemon.name : '');
 
   function handleOnChange(v: ChangeEvent<HTMLInputElement>) {
-    setName(v.target.value.toLowerCase());
+    setName(v.target.value);
   }
 
   return (
@@ -75,9 +76,7 @@ export default function PokemonPage() {
           <PokemonCard id={pokemon.id} name={pokemon.name} sprite={pokemon.sprite} />
         </>
       ) : (
-        <h1 data-cy='error'>
-          No pokemon found, please try another one!
-        </h1>
+        <Error message={'No pokemon found, please try another one!'} />
       )}
     </div>
   );
