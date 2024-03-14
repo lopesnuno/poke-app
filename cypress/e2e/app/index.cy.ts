@@ -20,7 +20,8 @@ describe('Poke App', () => {
           expect(l.pathname).to.eq('/charizard');
         })
 
-          .get('button[name=next]')
+          .get('button[name=action]')
+          .eq(1)
           .click()
 
           .location().should((l) => {
@@ -37,7 +38,8 @@ describe('Poke App', () => {
           expect(l.pathname).to.eq('/charizard');
         })
 
-          .get('button[name=previous]')
+          .get('button[name=action]')
+          .eq(0)
           .click()
 
           .location().should((l) => {
