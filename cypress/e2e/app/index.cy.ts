@@ -9,7 +9,7 @@ describe('Poke App', () => {
       searchPokemon('Unknown');
 
       cy.get('[data-cy=error]')
-        .contains('No pokemon found, please try another one!');
+        .contains('No pokemon found, please try another one');
     });
 
     context('Show previous/next pokemon', () => {
@@ -67,7 +67,6 @@ function searchPokemon(name: string) {
     .should('exist')
     .click()
 
-    // This is used to wait for page hydration
     .get('body[data-cy=ready]')
 
     .location()

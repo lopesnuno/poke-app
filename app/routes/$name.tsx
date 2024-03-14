@@ -1,5 +1,5 @@
 import { json } from '@remix-run/react';
-import { useLoaderData } from 'react-router';
+import { useActionData, useLoaderData } from 'react-router';
 import { ChangeEvent, useState } from 'react';
 import PokemonCard from '~/components/PokemonCard';
 import Input from '~/components/Input';
@@ -19,11 +19,17 @@ export const action = async ({ request }) => {
     const pokemonId = formData.get('pokemon-id');
 
     return redirect(`/${actionId === 'next' ? Number(pokemonId) + 1 : Number(pokemonId) - 1}`);
-  } else {
-    const pokemonName = formData.get('name') as string;
-
-    return redirect(`/${pokemonName.toLowerCase()}`);
   }
+
+  const pokemonName = formData.get('name') as string;
+
+  if (!pokemonName || pokemonName.length === 0) {
+    return json({
+      error: 'Please provide a name or an ID'
+    });
+  }
+
+  return redirect(`/${pokemonName.toLowerCase()}`);
 };
 
 
@@ -54,7 +60,9 @@ export const loader = async ({ params }) => {
 
 export default function PokemonPage() {
   const { pokemon } = useLoaderData();
-  const [name, setName] = useState<string>(pokemon ? pokemon.name : '');
+  const actionData = useActionData();
+
+  const [name, setName] = useState<string>();
 
   function handleOnChange(v: ChangeEvent<HTMLInputElement>) {
     setName(v.target.value);
@@ -64,19 +72,15 @@ export default function PokemonPage() {
     <div className='flex flex-col items-center gap-y-4 py-4'>
       <form method='post'>
         <div className='flex flex-row gap-x-2'>
-          <Input type='text' name='name' onChange={handleOnChange} value={name} placeholder={'Pokemon name or ID'} />
-          {name && name.length !== 0 && (
-            <Button type='submit' name='search'>Search</Button>
-          )}
+          <Input type='text' name='name' onChange={handleOnChange} value={name} placeholder={'Type Pikachu'} />
+          <Button type='submit' name='search'>Search</Button>
         </div>
       </form>
 
-      {pokemon ? (
-        <>
-          <PokemonCard id={pokemon.id} name={pokemon.name} sprite={pokemon.sprite} />
-        </>
+      {pokemon && !actionData?.error ? (
+        <PokemonCard id={pokemon.id} name={pokemon.name} sprite={pokemon.sprite} />
       ) : (
-        <Error message={'No pokemon found, please try another one!'} />
+        <Error message={actionData?.error ? actionData.error : 'No pokemon found, please try another one'} />
       )}
     </div>
   );
