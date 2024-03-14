@@ -38,7 +38,7 @@ export default function Index() {
   return (
     <form method='post' action='/?index' className='flex flex-col gap-y-2 items-center'>
       <div className='flex flex-row gap-x-2 py-4'>
-        <Input type='text' name='name' onChange={handleOnChange} />
+        <Input type='text' name='name' onChange={handleOnChange} placeholder={'Pokemon name or ID'} />
         {name && name.length !== 0 && (
           <Button type='submit' name='search'>Search</Button>
         )}

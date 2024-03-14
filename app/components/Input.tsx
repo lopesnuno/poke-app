@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Input({ id, name, onChange, value, type }: React.ComponentProps<'input'>) {
+export default function Input({ id, name, onChange, value, type, placeholder }: React.ComponentProps<'input'>) {
   return (
     <input
       id={id}
@@ -9,6 +9,7 @@ export default function Input({ id, name, onChange, value, type }: React.Compone
       value={value}
       type={type}
       className='shadow appearance-none border rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+      placeholder={placeholder}
     />
   );
 }

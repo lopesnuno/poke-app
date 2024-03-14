@@ -64,7 +64,7 @@ export default function PokemonPage() {
     <div className='flex flex-col items-center gap-y-4 py-4'>
       <form method='post'>
         <div className='flex flex-row gap-x-2'>
-          <Input type='text' name='name' onChange={handleOnChange} value={name} />
+          <Input type='text' name='name' onChange={handleOnChange} value={name} placeholder={'Pokemon name or ID'} />
           {name && name.length !== 0 && (
             <Button type='submit' name='search'>Search</Button>
           )}
